@@ -1,0 +1,28 @@
+{
+  "name": "herdgame",
+  "version": "0.1.0",
+  "description": "A herd immunity applet simulation",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stur86/herdgame.git"
+  },
+  "keywords": [
+    "Herd",
+    "immunity",
+    "science",
+    "visualization"
+  ],
+  "author": "Simone Sturniolo <simonesturniolo@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/stur86/herdgame/issues"
+  },
+  "homepage": "https://github.com/stur86/herdgame#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
