@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Herdgame</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Libraries -->
+    <script src="js/dat.gui.min.js" type="text/javascript"></script>
+    <script src="js/bundle.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="title_div">
+Herd immunity
+</div>
+<div class="main_div">
+    <p>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+    </p>
+    <h1>More things</h1>
+    <p>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+        Lorem ipsum and stuff.<br>
+    </p>
+    <svg id="main_demo">    
+    </svg>
+    <script>
+        $(document).ready(function(e) {
+            var model = new HerdModel('#main_demo');
+            var gui = makeDatGui(model);
+        });   
+    </script>
+</div>
+</body>
+</html>
