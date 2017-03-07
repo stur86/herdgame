@@ -14,14 +14,7 @@ Herd immunity
 </div>
 <div class="main_div">
     <p>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
-        Lorem ipsum and stuff.<br>
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     </p>
     <h1>More things</h1>
     <p>
@@ -41,11 +34,24 @@ Herd immunity
         Lorem ipsum and stuff.<br>
         Lorem ipsum and stuff.<br>
     </p>
-    <svg id="main_demo">    
-    </svg>
+    <div class="svg-container-main">
+        <svg id="main_demo" class="svg-content-responsive"
+            preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 600">    
+        </svg>
+    </div>
+    <div class="svg-container-plot">
+        <svg id="plot_demo" class="svg-content-responsive"
+            preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 300">   
+        </svg>
+    </div>
+    <div id="result_div">
+        <p>
+            Hey.
+        </p>
+    </div>
     <script>
         $(document).ready(function(e) {
-            var model = new HerdModel('#main_demo');
+            var model = new HerdModel('#main_demo', '#plot_demo');
             var gui = makeDatGui(model);
         });   
     </script>

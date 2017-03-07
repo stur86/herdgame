@@ -1,6 +1,8 @@
 $bkg_color: #eeeeee;
 $col_color: #ffffff;
 
+$svg_width: 0.7;
+
 body {
     background-color: $bkg_color;
     margin: 0;
@@ -16,7 +18,7 @@ h1 {
 p {
     margin: 0;
     border: 0;
-    padding: 0px 30px;
+    padding: 10px 30px;
 
     text-align: justify;
 }
@@ -40,14 +42,19 @@ p {
 .main_div {
     @extend .column;
     font-size: 16pt;
+    padding-bottom: 5%;
 }
 
 #main_demo {
-    width: 40vw;
-    height: 40vw;
 
-    margin: 5vw;
-    margin-bottom: 2vw;
+    padding: 0;
+    border: 3px solid;
+    border-color: #000000;
+}
+
+#plot_demo {
+
+    padding: 0;
     border: 3px solid;
     border-color: #000000;
 }
@@ -57,19 +64,41 @@ p {
     stroke-width: 2px;
 }
 
-.healthy {
-    fill: #ecc733;
-}
-
-.sick {
-    fill: #7f9f68;
-}
-
-.vaccinated {
-    fill: #81b8d7;
-}
-
 .link {
     stroke: #000000;
     stroke-width: 1px;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: $svg_width*100%;
+    vertical-align: top;
+    overflow: hidden;
+    padding-top: 1%;
+}
+
+.svg-container-main {
+    @extend .svg-container;
+    padding-bottom: $svg_width*60%+2%;
+}
+
+.svg-container-plot {
+    @extend .svg-container;
+    padding-bottom: $svg_width*30%+2%;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+}
+
+svg text {
+    font-size: 14pt;
+}
+
+.plot-line {
+    fill: none;
+    stroke-width: 4px;
 }
