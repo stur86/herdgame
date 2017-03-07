@@ -58,6 +58,7 @@ gulp.task('watch', ['browserSync'], function(){
 gulp.task('copyJS', function() {
   return gulp.src(['node_modules/d3/build/d3.min.js',
                    'node_modules/d3-voronoi/build/d3-voronoi.min.js',
-                   'node_modules/poisson-disc-sampler/poisson-disc-sampler.js'])
+                   'node_modules/poisson-disc-sampler/poisson-disc-sampler.js',
+                   'node_modules/waypoints/lib/noframework.waypoints.min.js'])
     .pipe(gulp.dest('app/js'));
 });

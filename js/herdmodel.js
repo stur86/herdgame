@@ -37,7 +37,7 @@ window.HerdModel = function(svg_id, plot_id) {
         var viewBox = plotcont.attr('viewBox');
         w_ext = parseInt(viewBox.split(' ')[2]);
         h_ext = parseInt(viewBox.split(' ')[3]);
-        var margin = {top: 20, right: 10, bottom: 40, left: 40};
+        var margin = {top: 30, right: 20, bottom: 60, left: 60};
         this.plot_width = w_ext - margin.left - margin.right;
         this.plot_height = h_ext - margin.top - margin.bottom;
         this.svgplot =  plotcont.append("g")
@@ -54,7 +54,7 @@ window.HerdModel = function(svg_id, plot_id) {
     this.death_f = 10;
     this.speed = 1;
 
-    this.plot_turns = 10;
+    this.plot_turns = 30;
 
     this.loop = null;
 
@@ -353,6 +353,22 @@ window.makeDatGui = function(model) {
     gui.add(model, 'plot_turns').min(5).max(40).step(1).name('Plotted history').onFinishChange(function() {model.plot();});
     gui.add(model, 'start').name('Start');
     gui.add(model, 'stop').name('Stop');
+    gui.close();
+
+    // Create Waypoint for it to appear
+    console.log($(model.svg_id));
+    var wayp = new Waypoint({
+      element: $(model.svg_id)[0],
+      handler: function(direction) {
+        if (direction == 'down') {
+            gui.open();
+        }
+        else {
+            gui.close();
+        }
+      },
+      offset: '50%'
+    });
 
     return gui;
 }
