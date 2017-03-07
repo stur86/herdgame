@@ -3,12 +3,46 @@ window.d3 = require('d3');
 window.d3.voronoi = require('d3-voronoi').voronoi;
 window.$ = require('jquery');
 
-window.HerdModel = function(svg_id) {
+
+window.HerdModel = function(svg_id, plot_id) {
+
+    // Colors
+    this.colors = [
+        '#ecc733',  // Healthy
+        '#7f9f68',  // Sick
+        '#81b8d7',  // Vaccinated
+        '#000000'   // Dead
+    ];
+
+    that = this;
+    this.col_func = function(d) {
+        if (d == 0)
+            return that.colors[0];
+        else if (d > 0)
+            return that.colors[1];
+        else if (d < 0)
+            return that.colors[2];
+        else
+            return that.colors[3];
+    }
 
     // Grab the svg
     this.svg_id = svg_id;
     if (svg_id != null) {
-        this.svg = d3.select(svg_id);        
+        this.svg = d3.select(svg_id);  
+    }
+    this.plot_id = plot_id;
+    if (plot_id != null) {
+        var plotcont = d3.select(plot_id);
+        var viewBox = plotcont.attr('viewBox');
+        w_ext = parseInt(viewBox.split(' ')[2]);
+        h_ext = parseInt(viewBox.split(' ')[3]);
+        var margin = {top: 20, right: 10, bottom: 40, left: 40};
+        this.plot_width = w_ext - margin.left - margin.right;
+        this.plot_height = h_ext - margin.top - margin.bottom;
+        this.svgplot =  plotcont.append("g")
+                        .attr("transform", 
+                              "translate(" + margin.left + "," + margin.top + ")");
     }
 
     this.n = 50;
@@ -20,14 +54,14 @@ window.HerdModel = function(svg_id) {
     this.death_f = 10;
     this.speed = 1;
 
+    this.plot_turns = 10;
+
     this.loop = null;
 
     this.update_display = function() {
         this.svg.selectAll('.goon')
             .data(this.goon_stat)
-            .classed('healthy', function(d) {return d == 0;})
-            .classed('sick', function(d) {return d > 0;})
-            .classed('vaccinated', function(d) {return d < 0;});
+            .attr('fill', that.col_func)
     }
 
     this.step = function(model) {
@@ -36,6 +70,7 @@ window.HerdModel = function(svg_id) {
 
         // So, create a new status
         var new_gstat = [];
+        var pop_n = [0,0,0,0];
         for (var i = 0; i < model.goon_stat.length; ++ i) {
             curr_stat = model.goon_stat[i];
             if (curr_stat != null) {
@@ -52,6 +87,8 @@ window.HerdModel = function(svg_id) {
                             curr_stat = null;
                         }
 
+                    }
+                    else {
                     }
 
                 }
@@ -74,27 +111,55 @@ window.HerdModel = function(svg_id) {
                     }
                 }                
             }
+            // Adjust population number
+            if (curr_stat != null)
+            {
+                if (curr_stat > 0) {
+                    pop_n[1]++;
+                }
+                else if (curr_stat == 0) {
+                    pop_n[0]++;
+                }
+                else {
+                    pop_n[2]++;
+                }
+            }
+            else {
+                pop_n[3]++;
+            }
             new_gstat.push(curr_stat);
         }
 
         model.goon_stat = new_gstat;
+        model.history.push(pop_n);
         if (model.svg != null)
             model.update_display();
+        if (model.svgplot != null)
+            model.plot();
+    
+        if (pop_n[1] == 0) {
+            model.stop(); // Epidemic is over
+        }
+
     }
 
     this.init = function() {
 
-        var w = 500;
-        var h = 500;
+        var w_ext = 1000;
+        var h_ext = 600;
         // What's the box size?
         var box_margin = 0.05;
         var box_insize = (1-2*box_margin);
         // First remove everything
-        if (this.svg != null) {        
+        if (this.svg != null) {     
+            // Get box size
+            var viewBox = this.svg.attr('viewBox');
+            w_ext = parseInt(viewBox.split(' ')[2]);
+            h_ext = parseInt(viewBox.split(' ')[3]);
             this.svg.selectAll('.goon').remove();
             this.svg.selectAll('.link').remove();
-            w = $(this.svg_id).width()*(1-2*box_margin);
-            h = $(this.svg_id).height()*(1-2*box_margin);
+            w = w_ext*box_insize;
+            h = h_ext*box_insize;
         }
         // Create the array of points
         this.points = [];
@@ -113,6 +178,7 @@ window.HerdModel = function(svg_id) {
             newp = sampler();
         }
 
+        this.history = [[0,0,0,0]];
         // Assign sick and vaccinated
         var vaccn = Math.round(this.vaccp/100.0*this.n);
         var sickn = Math.round(this.sickp/100.0*this.n);
@@ -125,12 +191,16 @@ window.HerdModel = function(svg_id) {
         for (var i = sickn; i > 0 && to_assign.length > 0; i--) {
             var rnd_i = Math.floor(Math.random()*to_assign.length);
             this.goon_stat[to_assign.splice(rnd_i,1)[0]] = this.sick_turns;
+            this.history[0][1]++;
         }
 
         for (var i = vaccn; i > 0 && to_assign.length > 0; i--) {
             var rnd_i = Math.floor(Math.random()*to_assign.length);
             this.goon_stat[to_assign.splice(rnd_i,1)[0]] = -1;
+            this.history[0][2]++;
         }
+
+        this.history[0][0] = to_assign.length;
 
         // Calculate Delaunay triangulation
         var voronoi = d3.voronoi();
@@ -189,13 +259,80 @@ window.HerdModel = function(svg_id) {
 
             this.update_display();            
         }
+
+        // Init plot
+        if (this.svgplot != null) {
+            this.plotx = d3.scaleLinear().rangeRound([0, this.plot_width]);
+            this.ploty = d3.scaleLinear().rangeRound([this.plot_height, 0])
+                                         .domain([0, this.n]);
+
+            // Clean existing lines
+            this.svgplot.selectAll('*').remove();
+
+            this.plotlines = [];
+
+            var that = this;
+            var makeyfunc = function(i) {
+                return function(d, j) { return that.ploty(d[i]);};
+            }            
+            for (var i = 0; i < 4; ++i) {
+                this.plotlines.push(
+                    [this.svgplot.append('path')    // Path
+                        .attr('id', 'line_'+i)
+                        .classed('plot-line', true)
+                        .attr('stroke', this.colors[i]),
+                     d3.line()
+                       .x(function(d, j) { return that.plotx(j);})
+                       .y(makeyfunc(i))
+                    ]
+                    );
+            }
+
+            this.svgplot.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + this.plot_height + ")");
+            this.svgplot.append("g")
+              .attr("class", "axis axis--y")
+              .call(d3.axisLeft(this.ploty));
+
+            this.plot();
+        }
+
     }
 
     this.start = function() {
+        // Stop anything still running...
+        this.stop();
+
         this.init();
 
         // And ready for update...
         this.loop = setInterval(this.step, 1000.0/this.speed, this);
+    }
+
+    this.stop = function() {
+        if (this.loop != null) {
+            clearInterval(this.loop);
+        }
+    }
+
+    this.plot = function() {
+
+        if (this.plotx == null)
+            return;
+
+        this.plotx.domain([0, this.plot_turns-1]);
+
+        var hist_slice = this.history.slice(Math.max(this.history.length-this.plot_turns, 0),
+                                            Math.max(this.history.length, this.plot_turns))
+        for (var i = 0; i < 4; ++i) {
+            this.plotlines[i][0].attr('d', this.plotlines[i][1](hist_slice));
+        }
+
+        this.plotx.domain([Math.max(this.history.length-this.plot_turns, 0),
+                           Math.max(this.history.length-1, this.plot_turns-1)]);
+        this.svgplot.select('.axis--x').call(d3.axisBottom(this.plotx));
+
     }
 }
 
@@ -210,8 +347,12 @@ window.makeDatGui = function(model) {
     gui.add(model, 'sickp').min(1).max(20).step(1).name('Sick (%)');
     gui.add(model, 'spread_p').min(1).max(15).step(1).name('Contagion prob. (%)');
     gui.add(model, 'vacc_eff').min(20).max(90).step(1).name('Vaccine eff. (%)');
+    gui.add(model, 'sick_turns').min(1).max(6).step(1).name('Sickness turns');
     gui.add(model, 'speed').min(0.2).max(5).name('Speed (turns/s)');
-    gui.add(model, 'start');
+    gui.add(model, 'death_f').min(5).max(40).name('Mortality (%)');
+    gui.add(model, 'plot_turns').min(5).max(40).step(1).name('Plotted history').onFinishChange(function() {model.plot();});
+    gui.add(model, 'start').name('Start');
+    gui.add(model, 'stop').name('Stop');
 
     return gui;
 }
