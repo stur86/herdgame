@@ -2,6 +2,7 @@ $bkg_color: #eeeeee;
 $col_color: #ffffff;
 
 $svg_width: 0.7;
+$plot_width: 0.5;
 
 body {
     background-color: $bkg_color;
@@ -85,7 +86,8 @@ p {
 
 .svg-container-plot {
     @extend .svg-container;
-    padding-bottom: $svg_width*30%+2%;
+    padding-bottom: $plot_width*60%+2%;
+    width: $plot_width*100%;
 }
 
 .svg-content-responsive {

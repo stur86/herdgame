@@ -61,7 +61,8 @@ p {
   padding-bottom: 44%; }
 
 .svg-container-plot {
-  padding-bottom: 23%; }
+  padding-bottom: 32%;
+  width: 50%; }
 
 .svg-content-responsive {
   display: inline-block;
