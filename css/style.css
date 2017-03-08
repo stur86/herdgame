@@ -1,0 +1,77 @@
+body {
+  background-color: #eeeeee;
+  margin: 0;
+  border: 0;
+  padding: 0; }
+
+h1 {
+  font-size: 20pt;
+  font-weight: bold; }
+
+p {
+  margin: 0;
+  border: 0;
+  padding: 10px 30px;
+  text-align: justify; }
+
+.column, .title_div, .main_div {
+  width: 70%;
+  margin-right: 15%;
+  margin-left: 15%;
+  background-color: #ffffff;
+  text-align: center; }
+
+.title_div {
+  font-size: 70pt;
+  font-weight: bold;
+  padding-top: 20px;
+  padding-bottom: 20px; }
+
+.main_div {
+  font-size: 16pt;
+  padding-bottom: 5%; }
+
+#main_demo {
+  padding: 0;
+  border: 3px solid;
+  border-color: #000000; }
+
+#plot_demo {
+  padding: 0;
+  border: 3px solid;
+  border-color: #000000; }
+
+.goon {
+  stroke: #222222;
+  stroke-width: 2px; }
+
+.link {
+  stroke: #000000;
+  stroke-width: 1px; }
+
+.svg-container, .svg-container-main, .svg-container-plot {
+  display: inline-block;
+  position: relative;
+  width: 70%;
+  vertical-align: top;
+  overflow: hidden;
+  padding-top: 1%; }
+
+.svg-container-main {
+  padding-bottom: 44%; }
+
+.svg-container-plot {
+  padding-bottom: 32%;
+  width: 50%; }
+
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  left: 0; }
+
+svg text {
+  font-size: 14pt; }
+
+.plot-line {
+  fill: none;
+  stroke-width: 4px; }
