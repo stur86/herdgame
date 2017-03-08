@@ -4,7 +4,7 @@ window.d3.voronoi = require('d3-voronoi').voronoi;
 window.$ = require('jquery');
 
 
-window.HerdModel = function(svg_id, plot_id) {
+window.HerdModel = function(svg_id, plot_id, textbox_id) {
 
     // Colors
     this.colors = [
@@ -44,6 +44,8 @@ window.HerdModel = function(svg_id, plot_id) {
                         .attr("transform", 
                               "translate(" + margin.left + "," + margin.top + ")");
     }
+    this.textbox_id = textbox_id;
+    this.textbox = $(textbox_id);
 
     this.n = 50;
     this.vaccp = 30;
@@ -136,6 +138,8 @@ window.HerdModel = function(svg_id, plot_id) {
             model.update_display();
         if (model.svgplot != null)
             model.plot();
+        if (model.textbox[0] != null)
+            model.update_text();
     
         if (pop_n[1] == 0) {
             model.stop(); // Epidemic is over
@@ -296,6 +300,7 @@ window.HerdModel = function(svg_id, plot_id) {
               .call(d3.axisLeft(this.ploty));
 
             this.plot();
+            this.update_text();
         }
 
     }
@@ -334,6 +339,16 @@ window.HerdModel = function(svg_id, plot_id) {
         this.svgplot.select('.axis--x').call(d3.axisBottom(this.plotx));
 
     }
+
+    this.update_text = function(status) {
+        var labels = ['healthy', 'sick', 'immune', 'dead'];
+        status = status || this.history[this.history.length-1];
+        for (var i = 0; i < labels.length; ++i) {
+            this.textbox.find('#n_' + labels[i]).html(status[i]);
+        }
+    }
+
+
 }
 
 window.makeDatGui = function(model) {
@@ -356,7 +371,6 @@ window.makeDatGui = function(model) {
     gui.close();
 
     // Create Waypoint for it to appear
-    console.log($(model.svg_id));
     var wayp = new Waypoint({
       element: $(model.svg_id)[0],
       handler: function(direction) {

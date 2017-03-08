@@ -35,26 +35,28 @@ Herd immunity
         Lorem ipsum and stuff.<br>
         Lorem ipsum and stuff.<br>
     </p>
-    <div class="svg-container-main">
-        <svg id="main_demo" class="svg-content-responsive"
-            preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 600">    
-        </svg>
-    </div>
-    <div class="svg-container-plot">
-        <svg id="plot_demo" class="svg-content-responsive"
-            preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 600">
-        </svg>
-    </div>
-    <div class="result-table">
-    </div>
-    <div id="result_div">
-        <p>
-            Hey.
-        </p>
+    <div class="applet">
+        <div class="svg-container-main">
+            <svg id="main_demo" class="svg-content-responsive"
+                preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 800">
+
+            </svg>
+        </div>
+        <div class="svg-container-plot">
+            <svg id="plot_demo" class="svg-content-responsive"
+                preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 600">
+            </svg>
+        </div>
+        <div id="status-table">
+            <p>Healthy goons: <span id="n_healthy">N/A</span></p>
+            <p>Immunised goons: <span id="n_immune">N/A</span></p>
+            <p>Sick goons: <span id="n_sick">N/A</span></p>
+            <p>Dead goons: <span id="n_dead">N/A</span></p>
+        </div>
     </div>
     <script>
         $(document).ready(function(e) {
-            var model = new HerdModel('#main_demo', '#plot_demo');
+            var model = new HerdModel('#main_demo', '#plot_demo', '#status-table');
             var gui = makeDatGui(model);
         });   
     </script>
