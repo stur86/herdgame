@@ -1,8 +1,8 @@
 $bkg_color: #eeeeee;
 $col_color: #ffffff;
 
-$svg_width: 0.7;
-$plot_width: 0.5;
+$svg_width: 0.6;
+$svg_margin: 0.01;
 
 body {
     background-color: $bkg_color;
@@ -25,7 +25,7 @@ p {
 }
 
 .column {
-    width: 70%;
+    width: 80%;
     margin-right: 15%;
     margin-left: 15%;    
     background-color: $col_color;
@@ -70,10 +70,17 @@ p {
     stroke-width: 1px;
 }
 
+.applet {
+    position: relative;
+    width: 96%;
+    height: 800px;
+    margin: 2%;
+    overflow: overlay;
+}
+
 .svg-container {
     display: inline-block;
-    position: relative;
-    width: $svg_width*100%;
+    position: absolute;
     vertical-align: top;
     overflow: hidden;
     padding-top: 1%;
@@ -81,13 +88,30 @@ p {
 
 .svg-container-main {
     @extend .svg-container;
-    padding-bottom: $svg_width*60%+2%;
+    padding-bottom: ($svg_width - 2*$svg_margin)*80%+2%;
+    width: ($svg_width - 2*$svg_margin)*100%;
+    margin: $svg_margin*100%;
+    left: 0;
+    top: 0;
 }
 
 .svg-container-plot {
     @extend .svg-container;
-    padding-bottom: $plot_width*60%+2%;
-    width: $plot_width*100%;
+    padding-bottom: ((1-$svg_width)- 2*$svg_margin)*60%+2%;
+    width: ((1-$svg_width)- 2*$svg_margin)*100%;
+    margin: $svg_margin*100%;
+    left: $svg_width*100%;
+    top: 0;
+}
+
+#status-table {
+    position: absolute;
+    padding: 0;
+    width: ((1-$svg_width)- 2*$svg_margin)*100%;
+    margin: $svg_margin*100%;
+    left: $svg_width*100%;
+    top: ((1-$svg_width)- 2*$svg_margin)*2*60%;
+    height: ((1-$svg_width)- 2*$svg_margin)*2*40%;
 }
 
 .svg-content-responsive {
@@ -96,6 +120,7 @@ p {
     left: 0;
 }
 
+
 svg text {
     font-size: 14pt;
 }
@@ -103,4 +128,24 @@ svg text {
 .plot-line {
     fill: none;
     stroke-width: 4px;
+}
+
+#n_healthy {
+    color: #ecc733;
+    font-weight: bold;
+}
+
+#n_immune {
+    color: #81b8d7;
+    font-weight: bold;
+}
+
+#n_sick {
+    color: #7f9f68;
+    font-weight: bold;
+}
+
+#n_dead {
+    color: #000000;
+    font-weight: bold;
 }
